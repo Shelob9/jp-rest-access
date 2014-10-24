@@ -24,12 +24,13 @@ if ( ! function_exists( 'jp_rest_access_post_vars') ) :
 	 * @return array
 	 */
 	add_filter( 'json_query_vars', 'jp_rest_access_post_vars' );
-endif;
+
 	function jp_rest_access_post_vars() {
 		$valid_vars = array_merge( $this->valid_vars );
 
 		return $valid_vars;
 	}
+endif;
 
 if ( ! function_exists( 'jp_rest_access_cors_header') ) :
 	/**
