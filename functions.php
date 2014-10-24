@@ -48,8 +48,19 @@ if ( ! function_exists( 'jp_rest_access_cors_header') ) :
 	function jp_rest_access_cors_header() {
 		$domain = apply_filters( 'jp_rest_access_cors', '*' );
 		if ( $domain && is_string( $domain ) ) {
-			header( "Access-Control-Allow-Origin: {$domain}" );
+			$allow = $domain;
 		}
+		elseif( is_array( $domain ) && $_SERVER[ 'HTTP_REFERER' ] ) {
+			$referer = parse_url( $_SERVER[ 'HTTP_REFERER' ], PHP_URL_HOST );
+			if ( $referer && in_array( $referer, $domain ) ){
+				$allow = $referer;
+			}
+		}
+		else {
+			$allow = false;
+		}
+
+		header( "Access-Control-Allow-Origin: {$allow}" );
 
 	}
 endif;
