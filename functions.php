@@ -13,7 +13,7 @@
 
 if ( ! function_exists( 'jp_rest_access_post_vars') ) :
 	/**
-	 * Add additional public valid vars for the posts endpoint
+	 * Add 'offset' as a public valid var for the posts endpoint
 	 *
 	 * @since 0.1.0
 	 *
@@ -24,7 +24,6 @@ if ( ! function_exists( 'jp_rest_access_post_vars') ) :
 	 * @return array
 	 */
 	add_filter( 'json_query_vars', 'jp_rest_access_post_vars' );
-
 	function jp_rest_access_post_vars( $valid_vars ) {
 
 		$valid_vars[] = 'offset';
@@ -41,14 +40,20 @@ if ( ! function_exists( 'jp_rest_access_cors_header') ) :
 	 *
 	 * @uses 'json_serve_request' filter
 	 *
-	 * @TODO array of domains/ match to HTTP referrer
-	 *
 	 * @since 0.1.0
 	 */
 	add_filter( 'json_serve_request', 'jp_rest_access_cors_header' );
 	function jp_rest_access_cors_header() {
+		/**
+		 * Filter CORS domains
+		 *
+		 * @param bool|string|array $domain Domain(s) to allow. Set a string for one domain, an array for multiple domains, or false for no header.
+		 *
+		 * @return bool|string|array
+		 *
+		 * @since 0.1.0
+		 */
 		$domain = apply_filters( 'jp_rest_access_cors', '*' );
-
 
 		if ( $domain && is_string( $domain ) ) {
 			$allow = $domain;
@@ -81,6 +86,16 @@ if ( ! function_exists( 'jp_rest_access_posts_per_page' ) ) :
 	 */
 	add_filter( 'json_query_var-posts_per_page', 'jp_rest_access_posts_per_page' );
 	function jp_rest_access_posts_per_page( $posts_per_page ) {
+		/**
+		 * Set your max posts per page to allow on posts endpoint
+		 *
+		 *
+		 * @since 0.1.0
+		 *
+		 * @param int $num Max number
+		 *
+		 * @return int
+		 */
 		$max_posts_per_page = apply_filters( 'jp_rest_access_max_posts_per_page', 20 );
 		if ( $max_posts_per_page < intval( $posts_per_page )  ) {
 			$posts_per_page = $max_posts_per_page ;
