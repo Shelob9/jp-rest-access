@@ -25,8 +25,9 @@ if ( ! function_exists( 'jp_rest_access_post_vars') ) :
 	 */
 	add_filter( 'json_query_vars', 'jp_rest_access_post_vars' );
 
-	function jp_rest_access_post_vars() {
-		$valid_vars = array_merge( $this->valid_vars );
+	function jp_rest_access_post_vars( $valid_vars ) {
+
+		$valid_vars[] = 'offset';
 
 		return $valid_vars;
 	}
@@ -47,13 +48,14 @@ if ( ! function_exists( 'jp_rest_access_cors_header') ) :
 	add_filter( 'json_serve_request', 'jp_rest_access_cors_header' );
 	function jp_rest_access_cors_header() {
 		$domain = apply_filters( 'jp_rest_access_cors', '*' );
+
+
 		if ( $domain && is_string( $domain ) ) {
 			$allow = $domain;
 		}
-		elseif( is_array( $domain ) && $_SERVER[ 'HTTP_REFERER' ] ) {
-			$referer = parse_url( $_SERVER[ 'HTTP_REFERER' ], PHP_URL_HOST );
-			if ( $referer && in_array( $referer, $domain ) ){
-				$allow = $referer;
+		elseif( is_array( $domain ) && isset( $_SERVER['HTTP_ORIGIN'] ) ) {
+			if ( $_SERVER['HTTP_ORIGIN'] && in_array( $_SERVER['HTTP_ORIGIN'], $domain ) ){
+				$allow = $_SERVER['HTTP_ORIGIN'];
 			}
 		}
 		else {
