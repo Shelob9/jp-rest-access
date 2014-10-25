@@ -11,6 +11,29 @@ It does the following:
 ### Installation
 This is not a plugin. It's a composer library. Add `"shelob9/jp-rest-access": "dev-master"` to your site/plugin/theme's composer.json. 
 
+### Controlling Cross-Orgin Domain (CORS) Headers
+* Allow from any domain
+This it the dfault behaviour
+
+* Allow from one domain
+```php
+add_filter( 'jp_rest_access_cors', function( $domains ) {
+	return 'http://somedomain.com';
+});
+```
+
+* Allow from two domains
+```php
+add_filter( 'jp_rest_access_cors', function( $domains ) {
+	return array( 'http://somedomain.com', 'http://another_url.com' );
+});
+```
+
+### Limiting the Max Number of Posts Per Request
+```php
+add_filter( 'jp_rest_access_max_posts_per_page', function( $max_posts ) {
+  return 5;
+}```
 
 ### License
 Copyright 2014 Josh Pollock. Licensed under the terms of the GNU General public license version 2. Please share with your neighbor.
