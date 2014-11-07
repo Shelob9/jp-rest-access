@@ -53,7 +53,7 @@ if ( ! function_exists( 'jp_rest_access_cors_header') ) :
 		 *
 		 * @since 0.1.0
 		 */
-		$domain = apply_filters( 'jp_rest_access_cors', '*' );
+		$domain = apply_filters( 'jp_rest_access_cors', get_option( 'josie_api_cors', '*' ) );
 
 		if ( $domain && is_string( $domain ) ) {
 			$allow = $domain;
@@ -96,12 +96,29 @@ if ( ! function_exists( 'jp_rest_access_posts_per_page' ) ) :
 		 *
 		 * @return int
 		 */
-		$max_posts_per_page = apply_filters( 'jp_rest_access_max_posts_per_page', 20 );
+		$max_posts_per_page = apply_filters( 'jp_rest_access_max_posts_per_page', get_option( 'josie_api_max_posts_per_page', 20 ) );
 		if ( $max_posts_per_page < intval( $posts_per_page )  ) {
 			$posts_per_page = $max_posts_per_page ;
 		}
 
 		return $posts_per_page;
+
+	}
+endif;
+
+if ( ! function_exists( 'jp_rest_access_set_defaults' ) ) :
+	function jp_rest_access_set_defaults( $prefix ) {
+		$options = array(
+			'cors' => '*',
+			'max_posts_per_page' => 20,
+		);
+		foreach( $options as $name => $default ) {
+			$name = $prefix.$name;
+			if( ! get_option( $name )){
+				update_option( $name, $default );
+			}
+
+		}
 
 	}
 endif;
